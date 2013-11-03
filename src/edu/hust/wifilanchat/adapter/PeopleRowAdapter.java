@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import edu.hust.wifilanchat.Member;
 import edu.hust.wifilanchat.R;
-import edu.hust.wifilanchat.obj.Member;
 
 public class PeopleRowAdapter extends ArrayAdapter<Member> {
 	

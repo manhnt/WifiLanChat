@@ -1,4 +1,4 @@
-package edu.hust.wifilanchat.obj;
+package edu.hust.wifilanchat;
 
 public class ChatMessage {
 	private String content;

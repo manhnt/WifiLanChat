@@ -12,8 +12,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import edu.hust.wifilanchat.ChatRoom;
 import edu.hust.wifilanchat.R;
-import edu.hust.wifilanchat.obj.ChatRoom;
 
 public class RoomsListActivity extends Activity {
 

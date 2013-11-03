@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import edu.hust.wifilanchat.ChatMessage;
 import edu.hust.wifilanchat.R;
-import edu.hust.wifilanchat.obj.ChatMessage;
 
 public class BubbleAdapter extends ArrayAdapter<ChatMessage> {
 	private Context context;

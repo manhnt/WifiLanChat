@@ -1,4 +1,4 @@
-package edu.hust.wifilanchat.obj;
+package edu.hust.wifilanchat;
 
 public class ChatRoom {
 	private String roomName;

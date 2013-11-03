@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import edu.hust.wifilanchat.Member;
 import edu.hust.wifilanchat.R;
 import edu.hust.wifilanchat.adapter.PeopleRowAdapter;
-import edu.hust.wifilanchat.obj.Member;
 
 public class PeopleListActivity extends ListActivity {
 

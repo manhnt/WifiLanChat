@@ -8,10 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import edu.hust.wifilanchat.ChatMessage;
+import edu.hust.wifilanchat.Member;
 import edu.hust.wifilanchat.R;
 import edu.hust.wifilanchat.adapter.BubbleAdapter;
-import edu.hust.wifilanchat.obj.ChatMessage;
-import edu.hust.wifilanchat.obj.Member;
 
 public class ChatActivity extends Activity {
 

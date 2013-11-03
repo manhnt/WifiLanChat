@@ -33,6 +33,10 @@
         </activity>
         <activity android:name="edu.hust.wifilanchat.activity.RoomsListActivity" >
         </activity>
+        
+        <service android:name="edu.hust.wifilanchat.networking.ServerService">
+            
+        </service>
     </application>
 
 </manifest>
