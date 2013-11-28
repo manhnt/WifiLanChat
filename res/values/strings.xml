@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Wifi LAN Chat</string>
+    <string name="app_name">WiFi Chat</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="view_chat_rooms">Chat Rooms</string>
@@ -13,5 +13,13 @@
     <string name="image_content_description">Some Description</string>
     <string name="send">Send</string>
     <string name="edit_msg_hint">Type your message</string>
-
+    <string name="to">To</string>
+    <string name="message">Message</string>
+    <string name="subject">Subject</string>
+	<string name="reminder">Reminder name</string>
+	<string name="done">Done</string>
+	<string name="set_nickname">Nick Name</string>
+	<string name="hint1">Room\'s name</string>
+	<string name="refresh">Refresh</string>
+	<string name="rescan">Rescan</string>
 </resources>

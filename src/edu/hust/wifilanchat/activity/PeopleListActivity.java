@@ -1,16 +1,18 @@
 package edu.hust.wifilanchat.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.ListActivity;
 import android.os.Bundle;
 import edu.hust.wifilanchat.Member;
+import edu.hust.wifilanchat.MemberManager;
 import edu.hust.wifilanchat.R;
 import edu.hust.wifilanchat.adapter.PeopleRowAdapter;
 
 public class PeopleListActivity extends ListActivity {
 
-	ArrayList<Member> people = new ArrayList<Member>();
+	List<Member> people = MemberManager.getInstance().getMemberList();
 	PeopleRowAdapter adapter = null;
 	
 	@Override
@@ -18,13 +20,18 @@ public class PeopleListActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.people_list);
 		
-		adapter = new PeopleRowAdapter(this, people);
-		Member p1 = new Member("Ng The Manh");
-		Member p2 = new Member("Michael Jackson");
-		Member p3 = new Member("Batman");
-		Member p4 = new Member("Bruce Wayne");
-		adapter.add(p1); adapter.add(p2); adapter.add(p3); adapter.add(p4);
-		
+		/*HostBean host = new HostBean(); host.setIpAddress("192.168.0.102");
+		Member m = new Member("Manh", host);
+		MemberManager.getInstance().addMember(m);*/
+
+		if (!people.isEmpty())
+			adapter = new PeopleRowAdapter(this, people);
+		else {
+			people = new ArrayList<Member>();
+			adapter = new PeopleRowAdapter(this, people);
+			Member p1 = new Member("Manh");
+			people.add(p1);
+		}
 		setListAdapter(adapter);
 	}
 }

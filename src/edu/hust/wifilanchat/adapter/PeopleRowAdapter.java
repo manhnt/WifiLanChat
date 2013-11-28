@@ -1,6 +1,6 @@
 package edu.hust.wifilanchat.adapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -14,12 +14,12 @@ import edu.hust.wifilanchat.R;
 public class PeopleRowAdapter extends ArrayAdapter<Member> {
 	
 	private Activity context;
-	private ArrayList<Member> data;
+	private List<Member> data;
 	
-	public PeopleRowAdapter(Activity a, ArrayList<Member> list) {
-		super(a, R.layout.people_row, list);
+	public PeopleRowAdapter(Activity a, List<Member> people) {
+		super(a, R.layout.people_row, people);
 		context = a;
-		data = list;
+		data = people;
 	}
 	
 	@Override

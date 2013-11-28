@@ -1,21 +1,29 @@
 package edu.hust.wifilanchat;
 
-import java.net.InetAddress;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-public class Member {
+import org.json.simple.JSONAware;
 
+import edu.hust.wifilanchat.networking.HostBean;
+
+public class Member implements Serializable, JSONAware {
+
+	/**
+	 * Default serial version
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
-	// TODO: add more necessary fields like IP address, etc.
-	private InetAddress ipAddr;
+	private HostBean host;
+	private transient ObjectOutputStream stream = null;
 	
 	public Member(String pName) {
 		this.name = pName;
-		this.ipAddr = null;
 	}
 	
-	public Member(String pName, InetAddress pAddr) {
+	public Member(String pName, HostBean pHost) {
 		this.name = pName;
-		this.ipAddr = pAddr;
+		this.host = pHost;
 	}
 	
 	public String getName() {
@@ -25,14 +33,35 @@ public class Member {
 		this.name = name;
 	}
 	
-	public InetAddress getIpAddr() {
-		return ipAddr;
+	public HostBean getHost() {
+		return host;
 	}
-	public void setIpAddr(InetAddress ipAddr) {
-		this.ipAddr = ipAddr;
+
+	public void setHost(HostBean host) {
+		this.host = host;
 	}
+
 	@Override
 	public String toString() {
 		return (getName());
+	}
+
+	@Override
+	public String toJSONString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		sb.append("\"name\":\"" + getName() + "\"");
+		sb.append(",");
+		sb.append("\"ip\":\"" + getHost().getIpAddress() + "\"");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	public ObjectOutputStream getStream() {
+		return stream;
+	}
+
+	public void setStream(ObjectOutputStream stream) {
+		this.stream = stream;
 	}
 }

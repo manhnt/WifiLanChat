@@ -1,8 +1,6 @@
 package edu.hust.wifilanchat.activity;
 
 import java.lang.ref.WeakReference;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,12 +23,18 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 import edu.hust.wifilanchat.Member;
 import edu.hust.wifilanchat.R;
+import edu.hust.wifilanchat.RoomManager;
+import edu.hust.wifilanchat.SayHelloThread;
+import edu.hust.wifilanchat.ServerService;
+import edu.hust.wifilanchat.UserPreferenceManager;
 import edu.hust.wifilanchat.networking.DefaultDiscovery;
 import edu.hust.wifilanchat.networking.HostBean;
 import edu.hust.wifilanchat.networking.NetInfo;
@@ -44,9 +49,7 @@ public class HomeScreenActivity extends Activity {
 	Button viewPeopleBtn = null;
 	Button settingBtn = null;
 	private ProgressDialog pDialog;
-	private boolean initialTaskDone = false;
-//	private boolean setupWifiDone = false;
-//	private ArrayList<Member> memberList = new ArrayList<Member>();
+	private boolean discoveryDone = false;
 	private List<HostBean> hosts = null;
 	
 	private long network_ip = 0;
@@ -54,6 +57,7 @@ public class HomeScreenActivity extends Activity {
     private long network_end = 0;
 	private NetInfo netinfo;
 	private AbstractDiscovery mDiscoveryTask = null;
+	private final int DISCOVERY_DONE = 1;
 	
 	public static SharedPreferences prefs = null;
 	public final static int SCAN_PORT_RESULT = 1;
@@ -61,14 +65,28 @@ public class HomeScreenActivity extends Activity {
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			if (pDialog != null)
-				pDialog.dismiss();
-			viewChatRoomListBtn.setEnabled(true);
-			viewPeopleBtn.setEnabled(true);
-			settingBtn.setEnabled(true);
-			initialTaskDone = true;
+			int arg1 = msg.arg1;
+			if (arg1 == DISCOVERY_DONE) {
+				/* If devices discovery task has finished */
+				if (pDialog != null)
+					pDialog.dismiss();
+				viewChatRoomListBtn.setEnabled(true);
+				viewPeopleBtn.setEnabled(true);
+				settingBtn.setEnabled(true);
+				discoveryDone = true;
+				
+				for (HostBean h : hosts) {
+					/* Gui ban tin HELLO_WORLD toi tat ca cac host */
+					Log.d(DEBUG_TAG, "Found host: " + h.getIpAddress());
+					SayHelloThread s = new SayHelloThread(h);
+					new Thread(s).start();
+				}
+			}
 		};
 	};
+	
+	UserPreferenceManager uManager = UserPreferenceManager.getInstance();
+//	RoomManager rManager = RoomManager.getInstance();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +97,13 @@ public class HomeScreenActivity extends Activity {
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
-		hosts = new ArrayList<HostBean>();
-		netinfo = new NetInfo(getApplicationContext());
-		setInfo();
-		
 		createGUI();
+		
+		/* Then open server for listening */
+		startListeningServer();
+		
+		/* Set default user's nickname */
+		uManager.setNickName(android.os.Build.MODEL);
 	}
 
 	@Override
@@ -97,17 +117,17 @@ public class HomeScreenActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		Log.i(DEBUG_TAG, "onResume");
+		findMyIP();
 		
-		if (isWifiConnected() && (!initialTaskDone)) {
+		hosts = new ArrayList<HostBean>();
+		netinfo = new NetInfo(getApplicationContext());
+		setNetInfo();
+		
+		if (isWifiConnected() && (!discoveryDone)) {
 			mDiscoveryTask = new DefaultDiscovery(this);
 			mDiscoveryTask.setNetwork(network_ip, network_start, network_end);
 			mDiscoveryTask.execute();
 			Log.i(DEBUG_TAG, "Executing Discovery Task");
-			
-			/*InitialTask task = new InitialTask();
-			task.execute();
-			Log.i(DEBUG_TAG, "Executed AsyncTask");*/
-			initialTaskDone = true;
 		}
 	}
 	
@@ -129,6 +149,40 @@ public class HomeScreenActivity extends Activity {
 		Log.i(DEBUG_TAG, "onDestroy");
 	}
 	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("discoveryDone", discoveryDone);
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		discoveryDone = savedInstanceState.getBoolean("discoveryDone");
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.home_screen, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.rescan:
+			//TODO: perform discovery task again
+			discoveryDone = false;
+			mDiscoveryTask = new DefaultDiscovery(this);
+			mDiscoveryTask.setNetwork(network_ip, network_start, network_end);
+			mDiscoveryTask.execute();
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 	private void setupWifiConnection() {
 		Log.i(DEBUG_TAG, "setupWifiConnection");
 		
@@ -172,7 +226,7 @@ public class HomeScreenActivity extends Activity {
 	}
 
 	
-	private void setInfo() {
+	private void setNetInfo() {
 	    // Get ip information
 	    long network_ip = NetInfo.getUnsignedLongFromIp(netinfo.ip);
 	    // Detected IP
@@ -195,6 +249,33 @@ public class HomeScreenActivity extends Activity {
 		return isWifiConn;
 	}
 
+	private void findMyIP() {
+		WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+		WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+		int ipAddress = wifiInfo.getIpAddress();
+		String ip = intToIp(ipAddress);
+		uManager.setMyIpAddr(ip);
+		Log.i(DEBUG_TAG, ip);
+		createMemberMe(ip);
+	}
+
+	private String intToIp(int i) {
+		int d = (i >> 24) & 0xFF;
+		int c = (i >> 16) & 0xFF;
+		int b = (i >> 8) & 0xFF;
+		int a = i & 0xFF;
+		String myIP = a + "." + b + "." + c + "." + d;
+		return myIP;
+	}
+
+	private void createMemberMe(String ipAddr) {
+		HostBean meHost = new HostBean();
+		String s = uManager.getNickName();
+		meHost.setUsername(android.os.Build.MODEL);
+		meHost.setIpAddress(ipAddr);
+		Member me = new Member(s, meHost);
+		uManager.setMe(me);
+	}
 
 	private void createGUI() {
 		viewChatRoomListBtn = (Button) findViewById(R.id.view_chat_rooms_btn);
@@ -232,79 +313,14 @@ public class HomeScreenActivity extends Activity {
 	}
 
 
-	private class InitialTask extends AsyncTask<Void, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-			pDialog = new ProgressDialog(HomeScreenActivity.this);
-			pDialog.setIndeterminate(true);
-			pDialog.setCancelable(false);
-			pDialog.setTitle("Processing");
-			pDialog.setMessage("Scanning...");
-			pDialog.show();
-		}
-		
-		@Override
-		protected Void doInBackground(Void... params) {
-//			memberList = discoverDevices();
-			introduceSelf();
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(Void result) {
-			Message msg = mHandler.obtainMessage();
-			mHandler.sendMessage(msg);
-		}
-		
-/*
-		private void discoverDevices() {
-			// TODO: tim kiem tat ca cac thiet bi co cai dat phan mem trong mang
-			// simulate taking sometime to scan
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		*/
-		private ArrayList<Member> discoverDevices() {
-			// TODO: tim kiem tat ca cac thiet bi co cai dat phan mem trong mang
-			// simulate taking sometime to scan
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-			ArrayList<Member> mList = new ArrayList<Member>();
-			InetAddress addr;
-			try {
-				addr = InetAddress.getByName("192.168.0.10");
-				mList.add(new Member("Member 1", addr));
-				addr = InetAddress.getByName("192.168.0.11");
-				mList.add(new Member("Member 2", addr));
-				addr = InetAddress.getByName("192.168.0.12");
-				mList.add(new Member("Member 3", addr));
-				addr = InetAddress.getByName("192.168.0.13");
-				mList.add(new Member("Member 4", addr));
-				addr = InetAddress.getByName("192.168.0.14");
-				mList.add(new Member("Member 5", addr));
-				addr = InetAddress.getByName("192.168.0.15");
-				mList.add(new Member("Member 6", addr));
-				
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
-			
-			return mList;
-		}
-		private void introduceSelf() {
-			
-		}
-		
+	/* Start server service */
+	private void startListeningServer() {
+		Intent service = new Intent(this, ServerService.class);
+		startService(service);
+		// TODO: bind service ?
+//		bindService(service, conn, flags);
 	}
-	
+
 	public abstract class AbstractDiscovery extends AsyncTask<Void, HostBean, Void> {
 	    final protected WeakReference<HomeScreenActivity> mDiscover;
 
@@ -364,16 +380,25 @@ public class HomeScreenActivity extends Activity {
 	        if (mDiscover != null) {
 	            final HomeScreenActivity discover = mDiscover.get();
 	            if (discover != null) {
-	                
 	                discover.makeToast("Discovery Finished!");
 	                discover.stopDiscovering();
-	                Iterator k = hosts.iterator();
-	                for(int i=0;i<hosts.size();i++)
-	                	Toast.makeText(getApplicationContext(), k.next().toString(), Toast.LENGTH_SHORT).show();
+	                Iterator<HostBean> k = hosts.iterator();
+	                if (hosts.size() == 0) {
+	                	Toast.makeText(getApplicationContext(), "No host", Toast.LENGTH_SHORT)
+	                	.show();
+	                }
+	                else {
+	                	for(int i=0;i<hosts.size();i++)
+	                	Toast.makeText(getApplicationContext(), k.next().toString(), Toast.LENGTH_SHORT)
+	                	.show();
+	                }
 	            }
 	        }
+	        
+	        discoveryDone = true;
 	        Message msg = mHandler.obtainMessage();
-			mHandler.sendMessage(msg);
+	        msg.arg1 = DISCOVERY_DONE;
+	        mHandler.sendMessage(msg);
 	    }
 
 	    @Override
@@ -396,7 +421,8 @@ public class HomeScreenActivity extends Activity {
 
 	public void addHost(HostBean hostBean) {
         //host.position = hosts.size();
-        hosts.add(hostBean);
+		if (!hostBean.getIpAddress().equals(uManager.getMyIpAddr()))
+			hosts.add(hostBean);
         //Toast.makeText(getApplicationContext(), host.toString(), Toast.LENGTH_SHORT).show();
         
     }
@@ -406,3 +432,4 @@ public class HomeScreenActivity extends Activity {
 		mDiscoveryTask = null;
 	}
 }
+

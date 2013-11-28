@@ -34,7 +34,7 @@
         <activity android:name="edu.hust.wifilanchat.activity.RoomsListActivity" >
         </activity>
         
-        <service android:name="edu.hust.wifilanchat.networking.ServerService">
+        <service android:name="edu.hust.wifilanchat.ServerService">
             
         </service>
     </application>
