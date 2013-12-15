@@ -6,9 +6,7 @@ import java.util.List;
 import org.json.simple.JSONArray;
 
 import edu.hust.wifilanchat.ChatRoom;
-import edu.hust.wifilanchat.Member;
 import edu.hust.wifilanchat.MyRoomsManager;
-import edu.hust.wifilanchat.UserPreferenceManager;
 
 public class AdvRoomMessage extends NetworkMessage {
 
@@ -23,15 +21,15 @@ public class AdvRoomMessage extends NetworkMessage {
 		createJSONContent();
 	}
 
-	public AdvRoomMessage(String pContent, Member pSender, MessageType t) {
-		super(pContent, pSender, t);
-		createJSONContent();
-	}
-
-	public AdvRoomMessage(Member pSender, MessageType t) {
-		super(null, pSender, t);
-		createJSONContent();
-	}
+//	public AdvRoomMessage(String pContent, Member pSender, MessageType t) {
+//		super(pContent, pSender, t);
+//		createJSONContent();
+//	}
+//
+//	public AdvRoomMessage(Member pSender, MessageType t) {
+//		super(null, pSender, t);
+//		createJSONContent();
+//	}
 	
 	public void addRoom(ChatRoom pRoom) {
 		roomList.add(pRoom);
@@ -43,6 +41,7 @@ public class AdvRoomMessage extends NetworkMessage {
 		sb.append("\"room\":");
 		sb.append(getJSONRoomArray());
 		sb.append("}");
+		
 		setContent(sb.toString());
 	}
 	private String getJSONRoomArray() {

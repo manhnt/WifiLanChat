@@ -18,6 +18,7 @@ public class UserPreferenceManager {
 
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
+		me.setName(nickName);
 	}
 	
 	public static UserPreferenceManager getInstance() {

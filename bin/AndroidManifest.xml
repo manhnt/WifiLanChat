@@ -29,7 +29,7 @@
         </activity>
         <activity android:name="edu.hust.wifilanchat.activity.ChatActivity" >
         </activity>
-        <activity android:name="edu.hust.wifilanchat.activity.PeopleListActivity" >
+        <activity android:name="edu.hust.wifilanchat.activity.MemberListActivity" >
         </activity>
         <activity android:name="edu.hust.wifilanchat.activity.RoomsListActivity" >
         </activity>

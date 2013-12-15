@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
+import edu.hust.wifilanchat.messages.AdvRoomMessage;
 import edu.hust.wifilanchat.messages.AdvSelfMessage;
 import edu.hust.wifilanchat.messages.AllowJoinMessage;
 import edu.hust.wifilanchat.messages.ChatMessage;
@@ -153,6 +154,20 @@ class ClientHandlder implements Runnable {
 			}
 			break;
 
+		case ADV_NEW_NAME:
+			// TODO: phan tich 
+			Member memWithNewName = msg.getSender();
+			MemberManager manager1 = MemberManager.getInstance();
+			synchronized (manager1) {
+				// If this member has been in my member list, remove him firstly.
+				removeOldIfDuplicate(memWithNewName);
+				// Then add him again into the list, in case of he has changed his nickname.
+				MemberManager.getInstance().addMember(memWithNewName);
+				Log.i(TAG, "Added one new member: " + memWithNewName.getName());
+			}
+			
+			break;
+			
 		case REQ_JOIN_ROOM:
 			// send back ALLOW_FOR_JOIN message
 			// TODO: tao ket noi voi client
@@ -162,9 +177,12 @@ class ClientHandlder implements Runnable {
 			ChatRoom room = MyRoomsManager.getInstance().getRoomById(which);
 			if (room != null) {
 				Log.i(TAG, "roomID = " + which + ", room name: " + room.toString());
+				/* Get the sender then add him to member list of this room */
 				Member m = msg.getSender();
 				m.setStream(oos);
 				room.addMember(m);
+				
+				/* Send back AllowJoinMessage */
 				NetworkMessage allow = new AllowJoinMessage(which);
 				allow.setSender(UserPreferenceManager.getInstance().getMe());
 				try {
@@ -205,8 +223,21 @@ class ClientHandlder implements Runnable {
 			
 		case START_CHAT:
 			// TODO:
-			Member m = msg.getSender();
+//			Member m = msg.getSender();
 			
+			break;
+		
+		case REQ_UPDATE_ROOMS:
+			// Gui ban tin AdvRoomMessage toi client
+			AdvRoomMessage arMsg = new AdvRoomMessage();
+			arMsg.setSender(UserPreferenceManager.getInstance().getMe());
+			try {
+				oos.writeObject(arMsg);
+				Log.i(TAG, "Sent AdvRoomMessage to client");
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.e(TAG, "Error in send AdvRoomMessage");
+			}
 			break;
 			
 		default:
@@ -222,9 +253,7 @@ class ClientHandlder implements Runnable {
 			Member m = i.next();
 			if (m.getHost().getIpAddress().equals(ip)){
 				i.remove();
-				Log.w(TAG, "Duplicated! Removed");
-				// FIXME: return immediately or not?
-				return;
+				Log.w(TAG, "Duplicated member " + m.getName() + "! Removed");
 			}
 		}
 	}

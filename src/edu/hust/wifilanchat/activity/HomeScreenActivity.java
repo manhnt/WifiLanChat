@@ -31,7 +31,6 @@ import android.widget.Button;
 import android.widget.Toast;
 import edu.hust.wifilanchat.Member;
 import edu.hust.wifilanchat.R;
-import edu.hust.wifilanchat.RoomManager;
 import edu.hust.wifilanchat.SayHelloThread;
 import edu.hust.wifilanchat.ServerService;
 import edu.hust.wifilanchat.UserPreferenceManager;
@@ -49,9 +48,11 @@ public class HomeScreenActivity extends Activity {
 	Button viewPeopleBtn = null;
 	Button settingBtn = null;
 	private ProgressDialog pDialog;
-	private boolean discoveryDone = false;
-	private List<HostBean> hosts = null;
 	
+	private boolean discoveryDone = false;
+	private boolean isDiscovering = false;
+	
+	private List<HostBean> hosts = null;
 	private long network_ip = 0;
     private long network_start = 0;
     private long network_end = 0;
@@ -74,6 +75,7 @@ public class HomeScreenActivity extends Activity {
 				viewPeopleBtn.setEnabled(true);
 				settingBtn.setEnabled(true);
 				discoveryDone = true;
+				isDiscovering = false;
 				
 				for (HostBean h : hosts) {
 					/* Gui ban tin HELLO_WORLD toi tat ca cac host */
@@ -123,10 +125,11 @@ public class HomeScreenActivity extends Activity {
 		netinfo = new NetInfo(getApplicationContext());
 		setNetInfo();
 		
-		if (isWifiConnected() && (!discoveryDone)) {
+		if ((!discoveryDone) && (!isDiscovering) && (isWifiConnected())) {
 			mDiscoveryTask = new DefaultDiscovery(this);
 			mDiscoveryTask.setNetwork(network_ip, network_start, network_end);
 			mDiscoveryTask.execute();
+			isDiscovering = true;
 			Log.i(DEBUG_TAG, "Executing Discovery Task");
 		}
 	}
@@ -172,11 +175,12 @@ public class HomeScreenActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.rescan:
-			//TODO: perform discovery task again
+			// Perform discovery task again
 			discoveryDone = false;
 			mDiscoveryTask = new DefaultDiscovery(this);
 			mDiscoveryTask.setNetwork(network_ip, network_start, network_end);
 			mDiscoveryTask.execute();
+			isDiscovering = true; discoveryDone = false;
 			return true;
 
 		default:
@@ -225,7 +229,6 @@ public class HomeScreenActivity extends Activity {
 		}
 	}
 
-	
 	private void setNetInfo() {
 	    // Get ip information
 	    long network_ip = NetInfo.getUnsignedLongFromIp(netinfo.ip);
@@ -297,7 +300,7 @@ public class HomeScreenActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(),
-						PeopleListActivity.class);
+						MemberListActivity.class);
 				startActivity(intent);
 			}
 		});

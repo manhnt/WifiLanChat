@@ -23,7 +23,6 @@ public class SayHelloThread implements Runnable {
 	
 	private String serverAddr;
 	private HostBean toHost;
-	//TODO: choose a reasonable timeout value
 	private static final int TIMEOUT = 5000;	// Socket timeout = 5s
 	private static final int SERVER_PORT = 25125;
 	
@@ -40,7 +39,7 @@ public class SayHelloThread implements Runnable {
 	
 	@Override
 	public void run() {
-		// TODO: tao socket, ket noi den server, gui ban tin Hello world
+		// Tao socket, ket noi den server, gui ban tin Hello world
 		// tao socket, ket noi den server
 		Socket s = new Socket();
 

@@ -11,16 +11,16 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        public static final int barDarkColor=0x7f040007;
-        public static final int barLightColor=0x7f040009;
-        public static final int barMeduimColor=0x7f040008;
-        public static final int listViewBg=0x7f040003;
-        public static final int sendDarkColor=0x7f040006;
-        public static final int sendLightColor=0x7f040004;
-        public static final int sendMeduimColor=0x7f040005;
-        public static final int textColor=0x7f040000;
-        public static final int textFieldColor=0x7f040001;
-        public static final int textShadow=0x7f040002;
+        public static final int barDarkColor=0x7f050007;
+        public static final int barLightColor=0x7f050009;
+        public static final int barMeduimColor=0x7f050008;
+        public static final int listViewBg=0x7f050003;
+        public static final int sendDarkColor=0x7f050006;
+        public static final int sendLightColor=0x7f050004;
+        public static final int sendMeduimColor=0x7f050005;
+        public static final int textColor=0x7f050000;
+        public static final int textFieldColor=0x7f050001;
+        public static final int textShadow=0x7f050002;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -29,8 +29,8 @@ public final class R {
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f050000;
-        public static final int activity_vertical_margin=0x7f050001;
+        public static final int activity_horizontal_margin=0x7f060000;
+        public static final int activity_vertical_margin=0x7f060001;
     }
     public static final class drawable {
         public static final int bubble_green=0x7f020000;
@@ -43,28 +43,31 @@ public final class R {
         public static final int send_button=0x7f020007;
     }
     public static final class id {
-        public static final int action_settings=0x7f090013;
-        public static final int choose_people_prompt=0x7f09000f;
-        public static final int choose_room_text=0x7f090007;
-        public static final int content=0x7f09000e;
-        public static final int create_room_btn=0x7f090009;
-        public static final int edit_message=0x7f090004;
-        public static final int icon=0x7f090010;
-        public static final int inner_wrapper=0x7f09000c;
-        public static final int list_chat_rooms=0x7f090008;
-        public static final int list_message=0x7f090003;
-        public static final int outter_wrapper=0x7f09000b;
-        public static final int person_name=0x7f090011;
-        public static final int refresh=0x7f090015;
-        public static final int rescan=0x7f090014;
-        public static final int room_name=0x7f09000a;
-        public static final int send_button=0x7f090005;
-        public static final int sender_name=0x7f09000d;
-        public static final int settings_btn=0x7f090002;
-        public static final int tabHost1=0x7f090006;
-        public static final int view_chat_rooms_btn=0x7f090000;
-        public static final int view_people_btn=0x7f090001;
-        public static final int voice_call_btn=0x7f090012;
+        public static final int TextView01=0x7f0a000b;
+        public static final int TextView02=0x7f0a000c;
+        public static final int action_settings=0x7f0a0015;
+        public static final int choose_people_prompt=0x7f0a0011;
+        public static final int choose_room_text=0x7f0a0007;
+        public static final int content=0x7f0a0010;
+        public static final int create_room_btn=0x7f0a0009;
+        public static final int edit_message=0x7f0a0004;
+        public static final int icon=0x7f0a0012;
+        public static final int inner_wrapper=0x7f0a000e;
+        public static final int list_chat_rooms=0x7f0a0008;
+        public static final int list_message=0x7f0a0003;
+        public static final int outter_wrapper=0x7f0a000d;
+        public static final int person_name=0x7f0a0013;
+        public static final int refresh=0x7f0a0018;
+        public static final int refresh_mem_list=0x7f0a0017;
+        public static final int rescan=0x7f0a0016;
+        public static final int room_name=0x7f0a000a;
+        public static final int send_button=0x7f0a0005;
+        public static final int sender_name=0x7f0a000f;
+        public static final int settings_btn=0x7f0a0002;
+        public static final int tabHost1=0x7f0a0006;
+        public static final int view_chat_rooms_btn=0x7f0a0000;
+        public static final int view_people_btn=0x7f0a0001;
+        public static final int voice_call_btn=0x7f0a0014;
     }
     public static final class layout {
         public static final int activity_home_screen=0x7f030000;
@@ -73,37 +76,39 @@ public final class R {
         public static final int chat_rooms_list=0x7f030003;
         public static final int chat_text_screen=0x7f030004;
         public static final int create_room_dialog=0x7f030005;
-        public static final int message_row=0x7f030006;
-        public static final int people_list=0x7f030007;
-        public static final int people_row=0x7f030008;
-        public static final int setting_activity=0x7f030009;
+        public static final int file_view=0x7f030006;
+        public static final int message_row=0x7f030007;
+        public static final int people_list=0x7f030008;
+        public static final int people_row=0x7f030009;
+        public static final int setting_activity=0x7f03000a;
     }
     public static final class menu {
-        public static final int home_screen=0x7f080000;
-        public static final int room_list=0x7f080001;
+        public static final int home_screen=0x7f090000;
+        public static final int mem_list_activity=0x7f090001;
+        public static final int room_list=0x7f090002;
     }
     public static final class string {
-        public static final int action_settings=0x7f060001;
-        public static final int app_name=0x7f060000;
-        public static final int choose_people_promt=0x7f060008;
-        public static final int choose_room_prompt=0x7f060006;
-        public static final int create_room=0x7f060007;
-        public static final int done=0x7f060010;
-        public static final int edit_msg_hint=0x7f06000b;
-        public static final int hello_world=0x7f060002;
-        public static final int hint1=0x7f060012;
-        public static final int image_content_description=0x7f060009;
-        public static final int message=0x7f06000d;
-        public static final int refresh=0x7f060013;
-        public static final int reminder=0x7f06000f;
-        public static final int rescan=0x7f060014;
-        public static final int send=0x7f06000a;
-        public static final int set_nickname=0x7f060011;
-        public static final int settings=0x7f060005;
-        public static final int subject=0x7f06000e;
-        public static final int to=0x7f06000c;
-        public static final int view_chat_rooms=0x7f060003;
-        public static final int view_member=0x7f060004;
+        public static final int action_settings=0x7f070001;
+        public static final int app_name=0x7f070000;
+        public static final int choose_people_promt=0x7f070008;
+        public static final int choose_room_prompt=0x7f070006;
+        public static final int create_room=0x7f070007;
+        public static final int done=0x7f070010;
+        public static final int edit_msg_hint=0x7f07000b;
+        public static final int hello_world=0x7f070002;
+        public static final int hint1=0x7f070012;
+        public static final int image_content_description=0x7f070009;
+        public static final int message=0x7f07000d;
+        public static final int refresh=0x7f070013;
+        public static final int reminder=0x7f07000f;
+        public static final int rescan=0x7f070014;
+        public static final int send=0x7f07000a;
+        public static final int set_nickname=0x7f070011;
+        public static final int settings=0x7f070005;
+        public static final int subject=0x7f07000e;
+        public static final int to=0x7f07000c;
+        public static final int view_chat_rooms=0x7f070003;
+        public static final int view_member=0x7f070004;
     }
     public static final class style {
         /** 
@@ -127,10 +132,13 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f070000;
+        public static final int AppBaseTheme=0x7f080000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f070001;
+        public static final int AppTheme=0x7f080001;
+    }
+    public static final class xml {
+        public static final int preferences=0x7f040000;
     }
 }

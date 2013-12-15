@@ -19,6 +19,7 @@ public class AdvSelfMessage extends NetworkMessage {
 	public AdvSelfMessage() {
 		super(MessageType.ADV_SELF);
 		myNickName = UserPreferenceManager.getInstance().getNickName();
+		this.setSender(UserPreferenceManager.getInstance().getMe());
 		createJSONContent();
 	}
 
